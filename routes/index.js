@@ -31,6 +31,23 @@ var userDataSchema = new Schema({
 // assign mongoose data schema to var userdata
 var userData = mongoose.model('UserData', userDataSchema);
 
+// mongoose.connect(process.env.DB_LOCAL, {
+//     useNewUrlParser: true
+// }).on('connected', function(){
+//     console.log("Connected to mongoose.")
+// });
+
+// Deployed database
+mongoose.connect(process.env.DB_URL, {
+    useNewUrlParser: true
+  });
+  
+  mongoose.connection.on('connected', function(){
+    console.log("Connected to mongoose.")
+});
+
+
+
 // Getting the ladingpage
 router.get('/', function(req, res){
     res.render('landing', {

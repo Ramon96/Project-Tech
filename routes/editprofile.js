@@ -33,9 +33,9 @@ const uploadImage = multer({
 
 // Database connection
 // Local database
-mongoose.connect(process.env.DB_LOCAL, {
-    useNewUrlParser: true
-});
+// mongoose.connect(process.env.DB_LOCAL, {
+//     useNewUrlParser: true
+// });
 
 // Deployed database
 // mongoose.connect(process.env.DB_URL, {

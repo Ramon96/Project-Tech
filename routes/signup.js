@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 require('dotenv').config({});
 
-var id = process.env.USER_ID;
+// var id = process.env.USER_ID;
 var userData = mongoose.model('UserData');
 
 
