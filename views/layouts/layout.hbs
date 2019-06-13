@@ -7,8 +7,12 @@
   <title>{{ title }}</title>
   <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
+  {{#if headerless}}
+<body id="landing">
+  {{else}}
 <body>
   {{> header}}
+  {{/if}}
   {{{ body }}}
   <script src="/javascripts/zodimaniac.js"></script>
 </body>
