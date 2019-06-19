@@ -2,54 +2,87 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-require('dotenv').config({});
-
+var bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
-
 // define schema
 var userDataSchema = new Schema({
-  username: String,
-  password: String,
-  profilePicture: String,
-  premium: Boolean,
-  aboutme: String,
-  function: String,
-  company: String,
-  city: String,
-  isMale: Boolean,
-  prefMen: Boolean,
-  email: String,
-  DoB: String,
-  minAge: Number,
-  maxAge: Number,
-  maxDistance: Number,
-  pushNotification: Boolean
+    username: String,
+    password: String,
+    profilePicture: String,
+    premium: Boolean,
+    aboutme: String,
+    function: String,
+    company: String,
+    city: String,
+    isMale: Boolean,
+    prefMen: Boolean,
+    email: String,
+    DoB: String,
+    minAge: Number,
+    maxAge: Number,
+    maxDistance: Number,
+    pushNotification: Boolean,
+    zodiac: String
 }, {
-  collection: 'user-data'
+    collection: 'user-data'
+});
+require('dotenv').config({});
+
+
+
+userDataSchema.pre('save', function (next) {
+    var user = this;
+
+    if(!user.isModified('password')) {
+        return next();
+    }
+
+    this.hashPass(user.password, function (err, hash) {
+        if (err) {
+            return next(err);
+        }
+        user.password = hash;
+        console.log("nice!" + user);
+
+        next();
+    });
 });
 
+userDataSchema.methods.hashPass = function (givenPassword, cb) {
+    bcrypt.genSalt(10, function (err, salt) {
+        if (err) {
+            return cb(err);
+        }
+        bcrypt.hash(givenPassword, salt, function (err, hashedPassword) {
+            if (err) {
+                return cb(err);
+            }
+            return cb(null, hashedPassword);
+        });
+    });
+};
+
 // assign mongoose data schema to var userdata
+//eslint-disable-next-line
 var userData = mongoose.model('UserData', userDataSchema);
 
+// Local databse
 // mongoose.connect(process.env.DB_LOCAL, {
 //     useNewUrlParser: true
-// }).on('connected', function(){
-//     console.log("Connected to mongoose.")
 // });
 
 // Deployed database
 mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true
-  });
-  
-  mongoose.connection.on('connected', function(){
-    console.log("Connected to mongoose.")
 });
 
-
+// Logs a message when succesfully connected to the database
+mongoose.connection.on('connected', function () {
+    console.log("Connected to mongoose..");
+});
 
 // Getting the ladingpage
-router.get('/', function(req, res){
+router.get('/', function (req, res) {
     res.render('landing', {
         headerless: true
     });
@@ -88,7 +121,7 @@ router.post('/testarea/insert', function (req, res) {
         maxAge: req.body.maxAge,
         isMale: req.body.isMale,
         prefMen: req.body.prefMen
-    }
+    };
     var data = new userData(item);
     data.save();
     res.redirect('/testarea');

@@ -10,10 +10,10 @@
   {{#if headerless}}
 <body id="landing">
   {{else}}
-<body>
-  {{> header}}
+<body id="{{zodiac}}">
+  {{!-- {{> header}} --}}
   {{/if}}
   {{{ body }}}
-  <script src="/javascripts/zodimaniac.js"></script>
+  {{!-- <script src="/javascripts/zodimaniac.js"></script> --}}
 </body>
 </html>
