@@ -18,19 +18,19 @@ router.post('/check', function (req, res) {
         username: req.body.username
     }, function (err, doc) {
         console.log(doc);
-        if (doc.length == 0) {
+        if (!doc) {
+            console.log(err);
             //username doesnt exist
             req.session.errormessage = "Invalid username";
             res.redirect('/login');
         } else {
-            bcrypt.compare(req.body.password), doc.password
+            bcrypt.compare(req.body.password, doc.password)
                 .then(function (isMatch) {
                     if (!isMatch) {
                         req.session.errormessage = "Invalid password";
                         res.redirect('/login');
                     }
                     throw err;
-                    console.log("matched");
                     // req.session.loggedin = doc.username;
                 }).finally(function (err) {
                     if (err) {

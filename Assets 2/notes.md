@@ -1,1 +1,0 @@
-The assets folder is used, so that load the images in the wiki.
